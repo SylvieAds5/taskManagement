@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const protect = (req, res, next) => {
   let token;
 
-  // Vérifie si le header Authorization existe
+  // pourVérifier si le header Authorization existe
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith("Bearer")
@@ -11,7 +11,7 @@ const protect = (req, res, next) => {
     token = req.headers.authorization.split(" ")[1];
   }
 
-  // Si pas de token
+  // Si il ya pas de token
   if (!token) {
     return res.status(401).json({
       message: "Accès refusé, token manquant"

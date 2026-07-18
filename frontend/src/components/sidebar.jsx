@@ -1,5 +1,6 @@
-import { LayoutDashboard, ClipboardList, Settings, LogOut } from "lucide-react";
+import { LayoutDashboard, ClipboardList, Settings, LogOut,  FolderKanban  } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+
 
 export default function Sidebar() {
   const navigate = useNavigate();
@@ -18,21 +19,29 @@ export default function Sidebar() {
   };
 
   return (
-    <div className="w-64 h-screen bg-white border-r border-gray-100 shadow-sm flex flex-col justify-between p-6">
+    <div className="w-64 h-screen bg-white dark:bg-gray-800 border-r border-gray-100 dark:border-gray-700 shadow-sm flex flex-col justify-between p-6">
       {/* TOP */}
       <div>
-        <h1 className="text-xl font-bold text-primary mb-10">
-          Gestion des tâches
-        </h1>
+       <div className="mb-10 flex justify-center">
+  
+</div>
 
         <nav className="space-y-6">
           <Link
             to="/dashboard"
-            className="flex items-center gap-3 text-gray-700 hover:text-primary transition"
+            className="flex items-center gap-3 text-gray-700 dark:text-gray-200 hover:text-primary transition"
           >
             <LayoutDashboard size={20} />
             Dashboard
           </Link>
+
+          <Link
+  to="/projects"
+  className="flex items-center gap-3 text-gray-700 hover:text-primary transition"
+>
+  <FolderKanban size={20} />
+  Mes projets
+</Link>
 
           <Link
             to="/tasks"

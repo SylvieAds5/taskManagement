@@ -1,34 +1,46 @@
 const Task = require("../models/task");
+const Project = require("../models/project");
 
 const createTask = async (req, res) => {
   try {
-    const { title, description, dateDebut, dateFin } = req.body;
+      
+    const { title, description, dateDebut, dateFin, project } = req.body;
+    const projectExists = await Project.findOne({
+      _id: project,
+      user: req.user,
+    });
+
+    if (!projectExists) {
+      return res.status(404).json({
+        message: "Projet introuvable",
+      });
+    }
 
     const task = await Task.create({
       title,
       description,
       dateDebut,
       dateFin,
-      user: req.user
+      project,
+      user: req.user,
     });
 
     res.status(201).json(task);
-
   } catch (error) {
     res.status(500).json({
-      message: error.message
+      message: error.message,
     });
   }
 };
 
 const getTasks = async (req, res) => {
   try {
-    const tasks = await Task.find({ user: req.user });
+    const tasks = await Task.find({ user: req.user }).populate("project");
 
     res.status(200).json(tasks);
   } catch (error) {
     res.status(500).json({
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -49,7 +61,6 @@ const getTaskById = async (req, res) => {
     }
 
     res.status(200).json(task);
-
   } catch (error) {
     res.status(500).json({
       message: error.message,
@@ -65,30 +76,29 @@ const updateTask = async (req, res) => {
 
     if (!task) {
       return res.status(404).json({
-        message: "Tâche introuvable"
+        message: "Tâche introuvable",
       });
     }
 
     const updatedTask = await Task.findOneAndUpdate(
-  { _id: id, user: req.user },
-  req.body,
-  { new: true }
-);
+      { _id: id, user: req.user },
+      req.body,
+      { new: true },
+    );
 
-if (!updatedTask) {
-  return res.status(404).json({
-    message: "Tâche introuvable"
-  });
-}
+    if (!updatedTask) {
+      return res.status(404).json({
+        message: "Tâche introuvable",
+      });
+    }
 
     res.status(200).json({
       message: "Tâche mise à jour",
-      task: updatedTask
+      task: updatedTask,
     });
-
   } catch (error) {
     res.status(500).json({
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -99,26 +109,24 @@ const deleteTask = async (req, res) => {
 
     const task = await Task.findOneAndDelete({
       _id: id,
-      user: req.user
+      user: req.user,
     });
 
     if (!task) {
       return res.status(404).json({
-        message: "Tâche introuvable"
+        message: "Tâche introuvable",
       });
     }
 
     res.status(200).json({
-      message: "Tâche supprimée avec succès"
+      message: "Tâche supprimée avec succès",
     });
-
   } catch (error) {
     res.status(500).json({
-      message: error.message
+      message: error.message,
     });
   }
 };
-
 
 module.exports = {
   createTask,

@@ -1,71 +1,65 @@
-import { Link,useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Input from "../components/Input";
 import { registerUser } from "../services/api";
 
-
-
 export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
-   const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-  firstName: "",
-  lastName: "",
-  email: "",
-  password: ""
-});
-  
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+  });
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
   return (
     <div className="min-h-screen bg-soft flex items-center justify-center p-6">
-
       <div className="w-full max-w-md bg-[#F6FEFE] rounded-2xl shadow-lg p-8">
-
         <h1 className="text-2xl font-bold text-primary text-center mb-6">
           Task Management
         </h1>
 
         <div className="space-y-4">
+          <Input
+            name="firstName"
+            value={formData.firstName}
+            onChange={handleChange}
+            placeholder="Nom"
+          />
 
           <Input
-  name="firstName"
-  value={formData.firstName}
-  onChange={handleChange}
-  placeholder="Nom"
-/>
+            name="lastName"
+            value={formData.lastName}
+            onChange={handleChange}
+            placeholder="Prénom"
+          />
 
           <Input
-  name="lastName"
-  value={formData.lastName}
-  onChange={handleChange}
-  placeholder="Prénom"
-/>
-
-          <Input
-  name="email"
-  value={formData.email}
-  onChange={handleChange}
-  placeholder="Email"
-/>
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            placeholder="Email"
+          />
 
           {/* PASSWORD (design inchangé + toggle pro) */}
           <div className="relative">
-           <input
-  name="password"
-  value={formData.password}
-  onChange={handleChange}
-  type={showPassword ? "text" : "password"}
-  className="w-full p-3 border rounded-lg pr-10"
-  placeholder="Mot de passe"
-/>
+            <input
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              type={showPassword ? "text" : "password"}
+              className="w-full p-3 border rounded-lg pr-10"
+              placeholder="Mot de passe"
+            />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
@@ -109,26 +103,23 @@ export default function Register() {
               )}
             </button>
           </div>
-
         </div>
-<button
-  onClick={async () => {
-    try {
-      const res = await registerUser(formData);
+        <button
+          onClick={async () => {
+            try {
+              const res = await registerUser(formData);
 
-      console.log("REGISTER SUCCESS:", res.data);
+              console.log("REGISTER SUCCESS:", res.data);
 
-      navigate("/login");
-
-    } catch (error) {
-      console.log("ERROR:", error.response?.data || error.message);
-    }
-  }}
-  className="w-full mt-6 bg-primary text-white py-3 rounded-lg"
->
-  Créer un compte
-</button>
-        
+              navigate("/login");
+            } catch (error) {
+              console.log("ERROR:", error.response?.data || error.message);
+            }
+          }}
+          className="w-full mt-6 bg-primary text-white py-3 rounded-lg"
+        >
+          Créer un compte
+        </button>
 
         <p className="text-center mt-4 text-sm">
           Déjà un compte ?{" "}
@@ -136,7 +127,6 @@ export default function Register() {
             Se connecter
           </Link>
         </p>
-
       </div>
     </div>
   );
