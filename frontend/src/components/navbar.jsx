@@ -1,7 +1,12 @@
 import { Plus,Bell, Moon } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
-export default function Navbar({ user }) {
+export default function Navbar({
+  user,
+  searchValue,
+  onSearchChange,
+  showSearch = false,
+})  {
   console.log(user);
 const [darkMode, setDarkMode] = useState(
   localStorage.getItem("theme") === "dark"
@@ -34,9 +39,21 @@ const toggleTheme = () => {
   return (
    <div className="h-20 bg-white border-b border-gray-100 shadow-sm flex items-center justify-between px-6">
 
-      <div className="text-sm text-gray-600 dark:text-gray-200">
-        Bonjour, {user?.firstName}
-      </div>
+      <div>
+  {showSearch ? (
+    <input
+      type="text"
+      placeholder="Rechercher un projet..."
+      value={searchValue}
+      onChange={(e) => onSearchChange(e.target.value)}
+      className="w-80 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+    />
+  ) : (
+    <div className="text-sm text-gray-600 dark:text-gray-200">
+      Bonjour, {user?.firstName}
+    </div>
+  )}
+</div>
 
 
      <div className="flex items-center gap-3">

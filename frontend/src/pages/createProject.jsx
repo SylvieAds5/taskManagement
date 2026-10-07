@@ -2,10 +2,12 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SimpleLayout from "../components/SimpleLayout";
 import { createProject } from "../services/api";
+import Toast from "../components/Toast";
 
 export default function CreateProject() {
 
   const navigate = useNavigate();
+  const [toast, setToast] = useState("");
 
   const [formData, setFormData] = useState({
     name: "",
@@ -30,7 +32,11 @@ const handleSubmit = async (e) => {
   try {
     await createProject(formData);
 
-    navigate("/projects");
+    setToast("Projet créé avec succès !");
+
+    setTimeout(() => {
+      navigate("/projects");
+    }, 2000);
 
   } catch (error) {
     console.log(error.response?.data || error.message);
@@ -38,7 +44,12 @@ const handleSubmit = async (e) => {
 };
 
 
-  return (
+return (
+  <>
+    {toast && (
+      <Toast message={toast} />
+    )}
+
     <SimpleLayout>
 
       <div className="max-w-xl w-full bg-white border border-gray-100 shadow-sm rounded-xl p-6">
@@ -47,9 +58,7 @@ const handleSubmit = async (e) => {
           Créer un projet
         </h1>
 
-
         <form onSubmit={handleSubmit} className="space-y-4">
-
 
           <input
             name="name"
@@ -59,7 +68,6 @@ const handleSubmit = async (e) => {
             className="w-full p-3 border rounded-lg"
           />
 
-
           <textarea
             name="description"
             value={formData.description}
@@ -67,7 +75,6 @@ const handleSubmit = async (e) => {
             placeholder="Description du projet"
             className="w-full p-3 border rounded-lg"
           />
-
 
           <input
             type="date"
@@ -77,7 +84,6 @@ const handleSubmit = async (e) => {
             className="w-full p-3 border rounded-lg"
           />
 
-
           <input
             type="date"
             name="endDate"
@@ -86,14 +92,12 @@ const handleSubmit = async (e) => {
             className="w-full p-3 border rounded-lg"
           />
 
-
           <select
             name="status"
             value={formData.status}
             onChange={handleChange}
             className="w-full p-3 border rounded-lg"
           >
-
             <option value="En attente">
               En attente
             </option>
@@ -101,13 +105,7 @@ const handleSubmit = async (e) => {
             <option value="En cours">
               En cours
             </option>
-
-            <option value="Terminé">
-              Terminé
-            </option>
-
           </select>
-
 
           <button
             type="submit"
@@ -116,11 +114,11 @@ const handleSubmit = async (e) => {
             Créer le projet
           </button>
 
-
         </form>
 
       </div>
 
     </SimpleLayout>
-  );
+  </>
+);
 }

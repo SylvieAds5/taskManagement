@@ -6,6 +6,12 @@ const register = async (req, res) => {
   try {
     const { firstName, lastName, email, password } = req.body;
 
+    if (password.length < 8) {
+  return res.status(400).json({
+    message: "Le mot de passe doit contenir au moins 8 caractères."
+  });
+}
+
     const userExists = await User.findOne({ email });
 
     if (userExists) {
@@ -69,10 +75,15 @@ const login = async (req, res) => {
     );
 
     res.status(200).json({
-      message: "Connexion réussie",
-      token
-    });
-
+  message: "Connexion réussie",
+  token,
+  user: {
+    _id: user._id,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    email: user.email,
+  }
+});
   } catch (error) {
     res.status(500).json({
       message: error.message

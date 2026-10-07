@@ -28,11 +28,37 @@ const projectSchema = new mongoose.Schema(
       required: true,
     },
 
+    // Propriétaire du projet
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
+
+    // Collaborateurs du projet
+    collaborators: [
+      {
+        user: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+          required: true,
+        },
+
+        role: {
+          type: String,
+          enum: ["lecture", "modification"],
+          default: "lecture",
+        },
+      },
+    ],
+    invitations: [
+      {
+        email: { type: String, required: true, lowercase: true, trim: true },
+        role: { type: String, enum: ["lecture", "modification"], default: "lecture" },
+        tokenHash: { type: String, required: true },
+        expiresAt: { type: Date, required: true },
+      },
+    ],
   },
   {
     timestamps: true,

@@ -3,18 +3,29 @@ const Project = require("../models/project");
 
 const createTask = async (req, res) => {
   try {
-      
+
     const { title, description, dateDebut, dateFin, project } = req.body;
+
     const projectExists = await Project.findOne({
       _id: project,
       user: req.user,
     });
+
 
     if (!projectExists) {
       return res.status(404).json({
         message: "Projet introuvable",
       });
     }
+
+
+    // La tâche doit rester dans la période du projet
+    if (new Date(dateFin) > new Date(projectExists.endDate)) {
+      return res.status(400).json({
+        message: "La date de fin de la tâche ne peut pas dépasser la date de fin du projet."
+      });
+    }
+
 
     const task = await Task.create({
       title,
@@ -25,17 +36,21 @@ const createTask = async (req, res) => {
       user: req.user,
     });
 
+
     res.status(201).json(task);
+
   } catch (error) {
     res.status(500).json({
       message: error.message,
     });
   }
 };
-
 const getTasks = async (req, res) => {
   try {
-    const tasks = await Task.find({ user: req.user }).populate("project");
+    const sharedProjects = await Project.find({ "collaborators.user": req.user }).select("_id");
+    const tasks = await Task.find({
+      $or: [{ user: req.user }, { project: { $in: sharedProjects.map((project) => project._id) } }],
+    }).populate("project");
 
     res.status(200).json(tasks);
   } catch (error) {
@@ -50,10 +65,9 @@ const getTaskById = async (req, res) => {
     const { id } = req.params;
 
     const task = await Task.findOne({
-      _id: id,
-      user: req.user,
-    });
-
+  _id: id,
+  user: req.user,
+}).populate("project");
     if (!task) {
       return res.status(404).json({
         message: "Tâche introuvable",

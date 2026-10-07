@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import SimpleLayout from "../components/SimpleLayout";
 import { createTask } from "../services/api";
+import Toast from "../components/Toast";
 
 export default function CreateTask() {
 
@@ -20,6 +21,18 @@ export default function CreateTask() {
     dateDebut: "",
     dateFin: "",
   });
+  const [error, setError] = useState("");
+  const [toast, setToast] = useState("");
+
+  useEffect(() => {
+  if (error) {
+    const timer = setTimeout(() => {
+      setError("");
+    }, 4000); // disparition après 4 secondes
+
+    return () => clearTimeout(timer);
+  }
+}, [error]);
 
 
 
@@ -34,38 +47,48 @@ export default function CreateTask() {
 
 
 
-  const handleSubmit = async (e) => {
+ const handleSubmit = async (e) => {
 
-    e.preventDefault();
+  e.preventDefault();
 
+  try {
 
-    try {
+    setError("");
 
-      await createTask({
+   await createTask({
 
-        ...formData,
+  ...formData,
 
-        // liaison avec le projet
-        project: id,
+  project: id,
 
-      });
+});
 
+setToast("Tâche créée avec succès !");
 
-      // retour vers le détail du projet
-      navigate(`/projects/${id}`);
+setTimeout(() => {
+  navigate(`/projects/${id}`);
+}, 2000);
 
+  } catch (error) {
 
-    } catch (error) {
+    const message =
+      error.response?.data?.message ||
+      "Une erreur est survenue.";
 
-      console.log(error.response?.data || error.message);
+    setError(message);
 
-    }
+  }
 
-  };
+};
 
 
 
   return (
+
+  <>
+    {toast && (
+      <Toast message={toast} />
+    )}
 
     <SimpleLayout user={user}>
 
@@ -147,6 +170,11 @@ export default function CreateTask() {
 
           />
 
+{error && (
+  <div className="bg-red-100 border border-red-300 text-red-700 px-4 py-3 rounded-lg text-sm">
+    {error}
+  </div>
+)}
 
 
 
@@ -171,6 +199,7 @@ export default function CreateTask() {
 
 
     </SimpleLayout>
+    </>
 
   );
 

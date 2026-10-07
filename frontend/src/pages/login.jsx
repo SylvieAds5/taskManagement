@@ -5,35 +5,74 @@ import { useNavigate } from "react-router-dom";
 export default function Login() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
+ const handleChange = (e) => {
+  setError("");
 
-  const handleLogin = async () => {
-    try {
-      const res = await loginUser(formData);
-      console.log(res.data);
+  setFormData({
+    ...formData,
+    [e.target.name]: e.target.value,
+  });
+};
 
-      // pour  stockage token JWT
-      localStorage.setItem("token", res.data.token);
+const handleLogin = async () => {
+  try {
 
-      localStorage.setItem("user", JSON.stringify(res.data.user));
+    setError("");
+    setLoading(true);
 
-      // redirection dashboard
-      navigate("/dashboard");
-    } catch (error) {
-      console.log(error.response?.data?.message || "Erreur login");
+    if (!formData.email || !formData.password) {
+      const message = "Veuillez remplir tous les champs.";
+
+      setError(message);
+
+      setLoading(false);
+
+      setTimeout(() => {
+        setError("");
+      }, 4000);
+
+      return;
     }
-  };
+
+    const res = await loginUser(formData);
+
+    localStorage.setItem(
+      "token",
+      res.data.token
+    );
+
+    localStorage.setItem(
+      "user",
+      JSON.stringify(res.data.user)
+    );
+
+    navigate("/dashboard");
+
+
+  } catch (error) {
+
+    const message =
+      error.response?.data?.message ||
+      "Une erreur est survenue lors de la connexion.";
+
+    setError(message);
+
+    setTimeout(() => {
+      setError("");
+    }, 4000);
+
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="min-h-screen bg-soft flex items-center justify-center p-6">
@@ -103,13 +142,36 @@ export default function Login() {
             </button>
           </div>
         </div>
+        {error && (
+  <div
+    className="
+      mt-4
+      bg-red-50
+      border
+      border-red-300
+      text-red-600
+      px-4
+      py-3
+      rounded-lg
+      text-sm
+      animate-pulse
+    "
+  >
+    {error}
+  </div>
+)}
 
         <button
-          onClick={handleLogin}
-          className="w-full mt-6 bg-primary text-white py-3 rounded-lg"
-        >
-          Se connecter
-        </button>
+  onClick={handleLogin}
+  disabled={loading}
+  className={`w-full mt-6 py-3 rounded-lg text-white ${
+    loading
+      ? "bg-gray-400 cursor-not-allowed"
+      : "bg-primary"
+  }`}
+>
+  {loading ? "Connexion..." : "Se connecter"}
+</button>
       </div>
     </div>
   );

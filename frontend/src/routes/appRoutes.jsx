@@ -10,6 +10,7 @@ import CreateProject from "../pages/createProject";
 import Projects from "../pages/Projects";
 import ProjectDetails from"../pages/ProjectDetails";
 import EditProject from "../pages/EditProject";
+import AcceptInvitation from "../pages/AcceptInvitation";
 
 
 
@@ -23,6 +24,7 @@ function AppRoutes() {
     <Routes>
       <Route path="/" element={<Register />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/invitations/:token" element={<AcceptInvitation />} />
       <Route path="/dashboard" element={<Dashboard />} />
 
        {/* TASKS */}

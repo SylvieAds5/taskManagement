@@ -75,15 +75,25 @@ if (filter === "retard")
 
 
         {/* HEADER */}
-        <div>
-          <h1 className="text-2xl font-bold text-gray-800">
-            Bonjour, {user.firstName || "Utilisateur"}
-          </h1>
+      <div>
+  <h1 className="text-2xl font-bold text-gray-800">
+    Tableau de bord
+  </h1>
 
-          <p className="text-gray-500">
-            Vue d’ensemble de vos projets
-          </p>
-        </div>
+  <p className="text-gray-500">
+    Aujourd'hui :{" "}
+    {new Date().toLocaleDateString("fr-FR", {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    })}
+  </p>
+
+<p className="text-gray-600 text-base md:text-lg font-medium mt-2">
+  Suivez l'évolution de vos projets et gardez le contrôle sur vos échéances.
+</p>
+</div>
 
 
 

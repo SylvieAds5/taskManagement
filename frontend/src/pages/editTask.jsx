@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getTaskById, updateTask } from "../services/api";
 import SimpleLayout from "../components/SimpleLayout";
+import Toast from "../components/Toast";
 
 export default function EditTask() {
   const { id } = useParams();
@@ -11,6 +12,7 @@ export default function EditTask() {
   const [formData, setFormData] = useState(null);
 
   const [loading, setLoading] = useState(true);
+  const [toast, setToast] = useState("");
 
   useEffect(() => {
     const fetchTask = async () => {
@@ -38,17 +40,22 @@ export default function EditTask() {
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+ const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    try {
-      await updateTask(id, formData);
+  try {
+    await updateTask(id, formData);
 
+    setToast("Tâche modifiée avec succès !");
+
+    setTimeout(() => {
       navigate("/tasks");
-    } catch (error) {
-      console.log(error.response?.data || error.message);
-    }
-  };
+    }, 2000);
+
+  } catch (error) {
+    console.log(error.response?.data || error.message);
+  }
+};
 
   if (loading) {
     return (
@@ -60,17 +67,32 @@ export default function EditTask() {
 
   return (
     <SimpleLayout>
+      {toast && (
+  <Toast message={toast} />
+)}
       <div className="max-w-xl mx-auto bg-white border border-gray-100 shadow-sm rounded-xl p-6">
         <h1 className="text-xl font-semibold mb-6">Modifier la tâche</h1>
 
         {/* SECTION : ANCIENNE TACHE */}
 
         <div className="mb-6 p-4 bg-gray-50 rounded-lg border">
+
           <p className="text-sm text-gray-500 mb-2">Tâche actuelle</p>
+            
 
           <p className="font-semibold">{formData.title}</p>
 
           <p className="text-gray-600 text-sm">{formData.description}</p>
+
+          <div className="mt-3">
+  <p className="text-sm text-gray-500">
+    Projet
+  </p>
+
+  <p className="font-medium text-primary">
+    {formData.project?.name}
+  </p>
+</div>
 
           <p className="text-sm mt-2">
             Statut :{" "}
@@ -81,6 +103,8 @@ export default function EditTask() {
             </span>
           </p>
         </div>
+
+
 
         {/* FORMULAIRE MODIFICATION */}
 
@@ -134,5 +158,7 @@ export default function EditTask() {
         </form>
       </div>
     </SimpleLayout>
+
+    
   );
 }

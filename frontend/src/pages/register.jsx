@@ -5,6 +5,9 @@ import { registerUser } from "../services/api";
 
 export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -15,11 +18,58 @@ export default function Register() {
   });
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
+  setError("");
+
+  setFormData({
+    ...formData,
+    [e.target.name]: e.target.value,
+  });
+};
+
+const handleRegister = async () => {
+  try {
+    setError("");
+    setLoading(true);
+
+    if (formData.password.length < 8) {
+      const message =
+        "Le mot de passe doit contenir au moins 8 caractères.";
+
+      setError(message);
+
+      setTimeout(() => {
+        setError("");
+      }, 4000);
+
+      return;
+    }
+
+  await registerUser(formData);
+
+setError("");
+
+const message = "Compte créé avec succès !";
+
+setSuccess(message);
+
+setTimeout(() => {
+  navigate("/login");
+}, 2000);
+
+  } catch (err) {
+
+    const message =
+      err.response?.data?.message ||
+      err.message ||
+      "Une erreur est survenue lors de l'inscription.";
+
+    setError(message);
+
+    setTimeout(() => {
+      setError("");
+    }, 4000);
+  }
+};
 
   return (
     <div className="min-h-screen bg-soft flex items-center justify-center p-6">
@@ -104,22 +154,54 @@ export default function Register() {
             </button>
           </div>
         </div>
-        <button
-          onClick={async () => {
-            try {
-              const res = await registerUser(formData);
 
-              console.log("REGISTER SUCCESS:", res.data);
+        {success && (
+  <div
+    className="
+      mt-4
+      bg-green-50
+      border
+      border-green-300
+      text-green-600
+      px-4
+      py-3
+      rounded-lg
+      text-sm
+    "
+  >
+    {success}
+  </div>
+)}
 
-              navigate("/login");
-            } catch (error) {
-              console.log("ERROR:", error.response?.data || error.message);
-            }
-          }}
-          className="w-full mt-6 bg-primary text-white py-3 rounded-lg"
-        >
-          Créer un compte
-        </button>
+{error && (
+  <div
+    className="
+      mt-4
+      bg-red-50
+      border
+      border-red-300
+      text-red-600
+      px-4
+      py-3
+      rounded-lg
+      text-sm
+      animate-pulse
+    "
+  >
+    {error}
+  </div>
+)}
+       <button
+  onClick={handleRegister}
+  disabled={loading}
+  className={`w-full mt-6 py-3 rounded-lg text-white ${
+    loading 
+      ? "bg-gray-400 cursor-not-allowed" 
+      : "bg-primary"
+  }`}
+>
+  {loading ? "Création..." : "Créer un compte"}
+</button>
 
         <p className="text-center mt-4 text-sm">
           Déjà un compte ?{" "}

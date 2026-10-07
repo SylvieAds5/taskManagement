@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import Toast from "../components/Toast";
 
 import SimpleLayout from "../components/SimpleLayout";
 
@@ -19,41 +20,39 @@ export default function EditProject() {
 
   const [loading, setLoading] = useState(true);
 
+  const [toast, setToast] = useState("");
+
 
 
   useEffect(() => {
 
-    const fetchProject = async () => {
+  const fetchProject = async () => {
 
-      try {
+    try {
 
-        const res = await getProjects();
+      const res = await getProjects();
 
+      const currentProject = res.data.find(
+        (p) => p._id === id
+      );
 
-        const currentProject = res.data.find(
-          (p) => p._id === id
-        );
+      setFormData(currentProject);
 
+    } catch (error) {
 
-        setFormData(currentProject);
+      console.log(error);
 
+    } finally {
 
-      } catch (error) {
+      setLoading(false);
 
-        console.log(error);
+    }
 
-      } finally {
+  };
 
-        setLoading(false);
+  fetchProject();
 
-      }
-
-    };
-
-
-    fetchProject();
-
-  }, [id]);
+}, [id]);
 
 
 
@@ -80,26 +79,26 @@ export default function EditProject() {
 
   const handleSubmit = async (e) => {
 
-    e.preventDefault();
+  e.preventDefault();
 
+  try {
 
-    try {
+    await updateProject(id, formData);
 
-      await updateProject(id, formData);
+    setToast("Projet modifié avec succès !");
 
-
+    setTimeout(() => {
       navigate(`/projects/${id}`);
+    }, 2000);
 
 
-    } catch (error) {
+  } catch (error) {
 
-      console.log(error.response?.data || error.message);
+    console.log(error.response?.data || error.message);
 
-    }
+  }
 
-  };
-
-
+};
 
 
 
@@ -123,6 +122,11 @@ export default function EditProject() {
 
 
   return (
+
+  <>
+    {toast && (
+      <Toast message={toast} />
+    )}
 
     <SimpleLayout user={user}>
 
@@ -325,6 +329,8 @@ export default function EditProject() {
 
 
     </SimpleLayout>
+
+      </>
 
   );
 

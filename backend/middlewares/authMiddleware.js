@@ -21,8 +21,6 @@ const protect = (req, res, next) => {
   try {
     // Vérifie le token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log("HEADERS =", req.headers.authorization);
-
     // On stocke l'id utilisateur dans req.user
     req.user = decoded.id;
 

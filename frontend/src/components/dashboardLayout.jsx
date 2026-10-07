@@ -6,13 +6,13 @@ export default function DashboardLayout({ children, user }) {
     <div className="h-screen bg-gray-50 dark:bg-gray-900 flex">
 
       {/* SIDEBAR FIXE */}
-      <aside className="fixed left-0 top-0 h-screen">
-        <Sidebar />
-      </aside>
+      <aside className="fixed left-0 top-0 h-screen w-56">
+  <Sidebar />
+</aside>
 
 
       {/* CONTENU A DROITE */}
-      <div className="flex-1 ml-64 flex flex-col">
+      <div className="flex-1 ml-56 flex flex-col">
 
 
         {/* NAVBAR FIXE */}
