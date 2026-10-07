@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import Input from "../components/Input";
+import Input from "../components/input";
 import { registerUser } from "../services/api";
 
 export default function Register() {

@@ -3,8 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Pencil, UserPlus, X } from "lucide-react";
 
 import Toast from "../components/Toast";
-import DashboardLayout from "../components/DashboardLayout";
-import TaskItem from "../components/TaskItem";
+import DashboardLayout from "../components/dashboardLayout";
+import TaskItem from "../components/taskItem";
 
 import {
   getTasks,

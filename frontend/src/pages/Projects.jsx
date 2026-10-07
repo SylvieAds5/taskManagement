@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import DashboardLayout from "../components/DashboardLayout";
+import DashboardLayout from "../components/dashboardLayout";
 import { getProjects } from "../services/api";
 import { Link } from "react-router-dom";
 import { Search } from "lucide-react";
@@ -55,7 +55,6 @@ export default function Projects() {
     type="text"
     placeholder="Rechercher un projet..."
     onChange={(e) => setSearch(e.target.value)}
-    placeholder="Rechercher un projet..."
     className="
       w-full
       pl-10 pr-4 py-2.5

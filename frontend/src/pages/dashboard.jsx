@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import DashboardLayout from "../components/DashboardLayout";
+import DashboardLayout from "../components/dashboardLayout";
 import { getProjects } from "../services/api";
 
 export default function Dashboard() {

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import DashboardLayout from "../components/DashboardLayout";
-import TaskItem from "../components/TaskItem";
+import DashboardLayout from "../components/dashboardLayout";
+import TaskItem from "../components/taskItem";
 import { getTasks } from "../services/api";
 
 export default function Tasks() {
