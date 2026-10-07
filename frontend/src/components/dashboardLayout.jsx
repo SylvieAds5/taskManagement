@@ -1,5 +1,5 @@
-import Sidebar from "./Sidebar";
-import Navbar from "./Navbar";
+import Sidebar from "./sidebar";
+import Navbar from "./navbar";
 
 export default function DashboardLayout({ children, user }) {
   return (
