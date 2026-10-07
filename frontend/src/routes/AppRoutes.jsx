@@ -1,22 +1,16 @@
 import { Routes, Route } from "react-router-dom";
 
-import Register from "../pages/Register";
-import Login from "../pages/Login";
-import Dashboard from "../pages/Dashboard";
-import Tasks from "../pages/Tasks"; 
-import CreateTask from "../pages/CreateTask";
-import EditTask from "../pages/EditTask";
+import Register from "../pages/register";
+import Login from "../pages/login";
+import Dashboard from "../pages/dashboard";
+import Tasks from "../pages/tasks"; 
+import CreateTask from "../pages/createTask";
+import EditTask from "../pages/editTask";
 import CreateProject from "../pages/createProject";
 import Projects from "../pages/Projects";
 import ProjectDetails from"../pages/ProjectDetails";
-import EditProject from "../pages/EditProject";
+import EditProject from "../pages/editProject";
 import AcceptInvitation from "../pages/AcceptInvitation";
-
-
-
-
-
-
 
 
 function AppRoutes() {
